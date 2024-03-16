@@ -1,7 +1,10 @@
 import express from "express";
-const ctrl = require("../controllers/contactsControllers");
-const validadeBody = require("../helpers/validateBody");
-const { schema } = require("../schemas/contactsSchemas");
+import ctrl from "../controllers/contactsControllers.js";
+import validateBody from "../helpers/validateBody.js";
+import {
+  createContactSchema,
+  updateContactSchema,
+} from "../schemas/contactsSchemas.js";
 
 const contactsRouter = express.Router();
 
@@ -11,15 +14,11 @@ contactsRouter.get("/:id", ctrl.getOneContact);
 
 contactsRouter.delete("/:id", ctrl.deleteContact);
 
-contactsRouter.post(
-  "/",
-  validadeBody(schema.createContactSchema),
-  ctrl.createContact
-);
+contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
 contactsRouter.put(
   "/:id",
-  validadeBody(schema.updateContactSchema),
+  validateBody(updateContactSchema),
   ctrl.updateContact
 );
 
