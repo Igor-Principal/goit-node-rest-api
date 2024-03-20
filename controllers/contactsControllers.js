@@ -1,5 +1,5 @@
 import HttpError from "../helpers/HttpError.js";
-import validateBody from "../helpers/validateBody.js";
+import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import * as contacts from "../services/contactsServices.js";
 
 const getAllContacts = async (req, res) => {
@@ -45,9 +45,9 @@ const updateContact = async (req, res) => {
 };
 
 export default {
-  getAllContacts,
-  getOneContact,
-  deleteContact,
-  createContact,
-  updateContact,
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  createContact: ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
 };
