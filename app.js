@@ -6,8 +6,8 @@ import mongoose from "mongoose";
 import contactsRouter from "./routes/contactsRouter.js";
 
 const app = express();
-const DB_HOST =
-  "mongodb+srv://Igrprinc:uLt3Rv8qUe6RuZpR@cluster0.pgnjizz.mongodb.net/db-contacts?retryWrites=true&w=majority&appName=Cluster0";
+// const DB_HOST =
+//   "mongodb+srv://Igrprinc:uLt3Rv8qUe6RuZpR@cluster0.pgnjizz.mongodb.net/db-contacts?retryWrites=true&w=majority&appName=Cluster0";
 
 app.use(morgan("tiny"));
 app.use(cors());
@@ -24,14 +24,17 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-mongoose
-  .connect(DB_HOST)
-  .then(() => {
-    app.listen(3000, () => {
-      console.log("Server is running. Use our API on port: 3000");
-    });
-  })
-  .catch((error) => {
-    console.log(error.message);
-    process.exit(1);
-  });
+app.listen(3000, () => {
+  console.log("Server is running. Use our API on port: 3000");
+});
+// mongoose
+//   .connect(DB_HOST)
+//   .then(() => {
+//     app.listen(3000, () => {
+//       console.log("Server is running. Use our API on port: 3000");
+//     });
+//   })
+//   .catch((error) => {
+//     console.log(error.message);
+//     process.exit(1);
+//   });

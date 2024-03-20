@@ -45,9 +45,9 @@ const updateContact = async (req, res) => {
 };
 
 export default {
-  getAllContacts: validateBody(getAllContacts),
-  getOneContact: validateBody(getOneContact),
-  deleteContact: validateBody(deleteContact),
-  createContact: validateBody(createContact),
-  updateContact: validateBody(updateContact),
+  getAllContacts,
+  getOneContact,
+  deleteContact,
+  createContact,
+  updateContact,
 };
