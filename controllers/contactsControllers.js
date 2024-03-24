@@ -20,20 +20,16 @@ const getOneContact = async (req, res) => {
   res.json(result);
 };
 
-const deleteContact = async (id) => {
-  Contact.findByIdAndDelete(id);
-  // const { id } = req.params;
-  // const result = await contacts.removeContact(id);
-  // if (!result) {
-  //   throw HttpError(404);
-  // }
-  // res.json({
-  //   message: "delete success",
-  // });
+const deleteContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndDelete({ _id: id });
+  if (result) {
+    res.json({ message: "Deleted succesful" });
+  }
 };
 
 const createContact = async (req, res) => {
-  const result = await contacts.addContact();
+  const result = await contacts.addContact(req.body);
   res.status(201).json(result);
 };
 
@@ -46,10 +42,20 @@ const updateContact = async (req, res) => {
   res.json(result);
 };
 
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const response = await contacts.updateFavoriteById(id, req.body);
+  if (!response) {
+    throw HttpError(404, "Not found");
+  }
+  res.status(200).json(response);
+};
+
 export default {
   getAllContacts: ctrlWrapper(getAllContacts),
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
