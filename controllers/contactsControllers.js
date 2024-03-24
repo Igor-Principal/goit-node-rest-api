@@ -1,5 +1,6 @@
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import Contact from "../models/Contact.js";
 import * as contacts from "../services/contactsServices.js";
 
 const getAllContacts = async (req, res) => {
@@ -19,15 +20,16 @@ const getOneContact = async (req, res) => {
   res.json(result);
 };
 
-const deleteContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contacts.removeContact(id);
-  if (!result) {
-    throw HttpError(404);
-  }
-  res.json({
-    message: "delete success",
-  });
+const deleteContact = async (id) => {
+  Contact.findByIdAndDelete(id);
+  // const { id } = req.params;
+  // const result = await contacts.removeContact(id);
+  // if (!result) {
+  //   throw HttpError(404);
+  // }
+  // res.json({
+  //   message: "delete success",
+  // });
 };
 
 const createContact = async (req, res) => {
