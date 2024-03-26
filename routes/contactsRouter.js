@@ -14,13 +14,12 @@ contactsRouter.get("/", ctrl.getAllContacts);
 
 contactsRouter.get("/:id", isValideId, ctrl.getOneContact);
 
-contactsRouter.delete("/:id", isValideId, ctrl.deleteContact);
+contactsRouter.delete("/:id", ctrl.deleteContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
 contactsRouter.put(
   "/:id",
-  isValideId,
   validateBody(updateContactSchema),
   ctrl.updateContact
 );
@@ -33,3 +32,4 @@ contactsRouter.patch(
 );
 
 export default contactsRouter;
+// DB_HOST =mongodb+srv://Igrprinc:uLt3Rv8qUe6RuZpR@cluster0.pgnjizz.mongodb.net/db-contacts?retryWrites=true&w=majority&appName=Cluster0
