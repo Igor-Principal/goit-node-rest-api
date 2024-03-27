@@ -14,12 +14,13 @@ contactsRouter.get("/", ctrl.getAllContacts);
 
 contactsRouter.get("/:id", isValideId, ctrl.getOneContact);
 
-contactsRouter.delete("/:id", ctrl.deleteContact);
+contactsRouter.delete("/:id", isValideId, ctrl.deleteContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
 contactsRouter.put(
   "/:id",
+  
   validateBody(updateContactSchema),
   ctrl.updateContact
 );
@@ -32,4 +33,3 @@ contactsRouter.patch(
 );
 
 export default contactsRouter;
-
