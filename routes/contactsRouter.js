@@ -7,6 +7,7 @@ import {
   updateContactSchema,
 } from "../schemas/contactsSchemas.js";
 import isValideId from "../middlewares/isValideId.js";
+import isValideBody from "../middlewares/isValidBody.js";
 
 const contactsRouter = express.Router();
 
@@ -20,7 +21,8 @@ contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
 contactsRouter.put(
   "/:id",
-  
+  isValideBody,
+  isValideId,
   validateBody(updateContactSchema),
   ctrl.updateContact
 );

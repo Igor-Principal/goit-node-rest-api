@@ -18,9 +18,11 @@ async function addContact(data) {
 }
 
 const updateContact = async (id, data) => {
-  Contact.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  return Contact.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
 };
-
 
 const updateFavoriteById = async (id, newData) => {
   return await Contact.findByIdAndUpdate(id, newData, { new: true });
