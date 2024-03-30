@@ -1,5 +1,6 @@
 import HttpError from "../helpers/HttpError.js";
-import validateBody from "../helpers/validateBody.js";
+import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import Contact from "../models/Contact.js";
 import * as contacts from "../services/contactsServices.js";
 
 const getAllContacts = async (req, res) => {
@@ -21,33 +22,43 @@ const getOneContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { id } = req.params;
-  const result = await contacts.removeContact(id);
-  if (!result) {
-    throw HttpError(404);
+  const user = await Contact.findOne({ _id: id });
+  const result = await Contact.findByIdAndDelete({ _id: id });
+  if (!result || !user) {
+    throw HttpError(404, "Not found");
   }
-  res.json({
-    message: "delete success",
-  });
+  const { _doc } = user;
+  res.json(_doc);
 };
 
 const createContact = async (req, res) => {
-  const result = await contacts.addContact();
+  const result = await contacts.addContact(req.body);
   res.status(201).json(result);
 };
 
 const updateContact = async (req, res) => {
   const { id } = req.params;
-  const result = await contacts.updateContact(id, req.body);
-  if (!result) {
-    throw HttpError(404);
+  const response = await contacts.updateContact(id, req.body);
+  if (!response) {
+    throw HttpError(404, "Not found");
   }
-  res.json(result);
+  res.json(response);
+};
+
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const response = await contacts.updateFavoriteById(id, req.body);
+  if (!response) {
+    throw HttpError(404, "Not found");
+  }
+  res.status(200).json(response);
 };
 
 export default {
-  getAllContacts: validateBody(getAllContacts),
-  getOneContact: validateBody(getOneContact),
-  deleteContact: validateBody(deleteContact),
-  createContact: validateBody(createContact),
-  updateContact: validateBody(updateContact),
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  createContact: ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
