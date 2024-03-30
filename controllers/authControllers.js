@@ -45,7 +45,7 @@ const signin = async (req, res) => {
   res.status(201).json({
     token,
     email: user.email,
-    password: user.subscription,
+    subscription: user.subscription,
   });
 };
 

@@ -8,8 +8,10 @@ import {
 } from "../schemas/contactsSchemas.js";
 import isValideId from "../middlewares/isValideId.js";
 import isValideBody from "../middlewares/isValidBody.js";
+import authenticate from "../middlewares/authenticate.js";
 
 const contactsRouter = express.Router();
+contactsRouter.use(authenticate)
 
 contactsRouter.get("/", ctrl.getAllContacts);
 
