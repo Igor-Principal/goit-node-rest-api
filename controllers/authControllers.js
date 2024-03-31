@@ -26,6 +26,7 @@ const signup = async (req, res) => {
     password: newUser.password,
   });
 };
+
 const signin = async (req, res) => {
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
@@ -39,8 +40,9 @@ const signin = async (req, res) => {
 
   const { _id: id } = user;
   const payload = { id };
-
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+  await authServices.updateUser({ _id: id }, { token });
+  console.log(id);
 
   res.status(201).json({
     token,
@@ -49,7 +51,26 @@ const signin = async (req, res) => {
   });
 };
 
+const getCurrent = async (req, res) => {
+  const { email } = req.user;
+  res.json({
+    email,
+  });
+};
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  console.log(_id);
+  await authServices.updateUser({ _id }, { token: "" });
+
+  res.json({
+    message: "Logout successful",
+  });
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
+  getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
 };

@@ -1,6 +1,6 @@
 import HttpError from "../helpers/HttpError.js";
 import jwt from "jsonwebtoken";
-import { findUser } from "../services/authServices.js";
+import * as authServices from "../services/authServices.js";
 
 const { JWT_SECRET } = process.env;
 
@@ -14,16 +14,16 @@ const authenticate = async (req, res, next) => {
   if (bearer !== "Bearer") {
     return next(HttpError(401));
   }
-
   try {
     const { id } = jwt.verify(token, JWT_SECRET);
-    const user = findUser({ _id: id });
+    const user = authServices.findUser({ _id: id });
     if (!user) {
       return next(HttpError(401, "User not found"));
     }
-    // if (!user.token) {
-    //   return next(HttpError(401, "Token invalid"));
-    // }
+    if (!user.token) {
+      return next(HttpError(401, "Token invalid"));
+    }
+    req.user = user;
     next();
   } catch {
     next(HttpError(401, error.message));
