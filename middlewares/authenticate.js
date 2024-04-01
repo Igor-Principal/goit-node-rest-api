@@ -16,10 +16,11 @@ const authenticate = async (req, res, next) => {
   }
   try {
     const { id } = jwt.verify(token, JWT_SECRET);
-    const user = authServices.findUser({ _id: id });
+    const user = await authServices.findUser({ _id: id });
     if (!user) {
       return next(HttpError(401, "User not found"));
     }
+
     if (!user.token) {
       return next(HttpError(401, "Token invalid"));
     }

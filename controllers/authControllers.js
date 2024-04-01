@@ -42,7 +42,6 @@ const signin = async (req, res) => {
   const payload = { id };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
   await authServices.updateUser({ _id: id }, { token });
-  console.log(id);
 
   res.status(201).json({
     token,
@@ -52,18 +51,18 @@ const signin = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email } = req.user;
+  const { email, token } = req.user;
   res.json({
     email,
+    token,
   });
 };
 
 const logout = async (req, res) => {
   const { _id } = req.user;
-  console.log(_id);
   await authServices.updateUser({ _id }, { token: "" });
 
-  res.json({
+  res.status(204).json({
     message: "Logout successful",
   });
 };

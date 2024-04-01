@@ -1,10 +1,11 @@
 import Contact from "../models/Contact.js";
 
-async function listContacts(filter = {}, setting = {}) {
-  return Contact.find({ filter }, "-createdAt -updatedAt", setting).populate(
-    "owner",
-    "email"
-  );
+async function listContacts(owner, page = 1, limit = 10) {
+  const skip = (page - 1) * limit;
+  return Contact.find({ owner }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "name email");
 }
 
 async function countContacts(filter) {
@@ -16,7 +17,7 @@ async function getContactByFilter(filter) {
 }
 
 async function removeContact(filter) {
-  Contact.findOneAndDelete(filter);
+ return await Contact.findOneAndDelete(filter);
 }
 
 async function addContact(data) {
@@ -24,7 +25,7 @@ async function addContact(data) {
 }
 
 const updateContact = async (filter, data) => {
-  return Contact.findOneAndUpdate(id, data, {
+  return Contact.findOneAndUpdate(filter, data, {
     new: true,
     runValidators: true,
   });
