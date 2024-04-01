@@ -1,6 +1,6 @@
 import Contact from "../models/Contact.js";
 
-async function listContacts(owner, page = 1, limit = 10) {
+async function listContacts(owner, page = 1, limit = 20) {
   const skip = (page - 1) * limit;
   return Contact.find({ owner }, "-createdAt -updatedAt", {
     skip,
