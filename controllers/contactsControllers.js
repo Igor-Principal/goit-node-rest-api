@@ -58,7 +58,12 @@ const updateContact = async (req, res) => {
 
 const updateStatusContact = async (req, res) => {
   const { id } = req.params;
-  const response = await contacts.updateFavoriteById(id, req.body);
+  const { _id: owner } = req.user;
+  const status = req.body.favorite;
+  const response = await contacts.updateFavoriteById(
+    { _id: id, owner },
+    status
+  );
   if (!response) {
     throw HttpError(404, "Not found");
   }

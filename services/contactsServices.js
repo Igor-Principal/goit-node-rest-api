@@ -17,7 +17,7 @@ async function getContactByFilter(filter) {
 }
 
 async function removeContact(filter) {
- return await Contact.findOneAndDelete(filter);
+  return await Contact.findOneAndDelete(filter);
 }
 
 async function addContact(data) {
@@ -31,8 +31,9 @@ const updateContact = async (filter, data) => {
   });
 };
 
-const updateFavoriteById = async (id, newData) => {
-  return await Contact.findByIdAndUpdate(id, newData, { new: true });
+const updateFavoriteById = async (id, status) => {
+  const contactStatus = { favorite: status };
+  return await Contact.findByIdAndUpdate(id, contactStatus, { new: true });
 };
 
 export {
