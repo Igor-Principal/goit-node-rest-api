@@ -33,7 +33,7 @@ const updateContact = async (filter, data) => {
 
 const updateFavoriteById = async (id, status) => {
   const contactStatus = { favorite: status };
-  return await Contact.findByIdAndUpdate(id, contactStatus, { new: true });
+  return await Contact.findOneAndUpdate(id, contactStatus, { new: true });
 };
 
 export {
