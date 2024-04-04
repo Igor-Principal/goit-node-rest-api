@@ -1,36 +1,45 @@
 import Contact from "../models/Contact.js";
 
-async function listContacts() {
-  return Contact.find();
+async function listContacts(owner, page = 1, limit = 20) {
+  const skip = (page - 1) * limit;
+  return Contact.find({ owner }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "name email");
 }
 
-async function getContactById(contactId) {
-  const data = await Contact.findById(contactId);
-  return data;
+async function countContacts(filter) {
+  return Contact.countDocuments(filter);
 }
 
-async function removeContact(contactId) {
-  Contact.findByIdAndDelete(contactId);
+async function getContactByFilter(filter) {
+  return Contact.findOne(filter);
+}
+
+async function removeContact(filter) {
+  return await Contact.findOneAndDelete(filter);
 }
 
 async function addContact(data) {
   return Contact.create(data);
 }
 
-const updateContact = async (id, data) => {
-  return Contact.findByIdAndUpdate(id, data, {
+const updateContact = async (filter, data) => {
+  return Contact.findOneAndUpdate(filter, data, {
     new: true,
     runValidators: true,
   });
 };
 
-const updateFavoriteById = async (id, newData) => {
-  return await Contact.findByIdAndUpdate(id, newData, { new: true });
+const updateFavoriteById = async (id, status) => {
+  const contactStatus = { favorite: status };
+  return await Contact.findOneAndUpdate(id, contactStatus, { new: true });
 };
 
 export {
   listContacts,
-  getContactById,
+  countContacts,
+  getContactByFilter,
   addContact,
   removeContact,
   updateContact,
