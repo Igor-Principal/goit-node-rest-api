@@ -2,6 +2,10 @@ import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import Contact from "../models/Contact.js";
 import * as contacts from "../services/contactsServices.js";
+import fs from "fs/promises";
+import path from "path";
+
+const avatarsPath = path.resolve("public", "avatars");
 
 const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
@@ -13,7 +17,6 @@ const getAllContacts = async (req, res) => {
   }
   res.json({ result, total });
 };
-
 
 const getOneContact = async (req, res) => {
   const { _id: owner } = req.user;
@@ -42,7 +45,11 @@ const deleteContact = async (req, res) => {
 
 const createContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await contacts.addContact({ ...req.body, owner });
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarsPath, filename);
+  await fs.rename(oldPath, newPath);
+  const avatarURL = path.join("avatar", filename);
+  const result = await contacts.addContact({ ...req.body, avatarURL, owner });
   res.status(201).json(result);
 };
 
