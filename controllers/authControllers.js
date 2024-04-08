@@ -1,9 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import gravatar from "gravatar";
 import * as authServices from "../services/authServices.js";
 
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import { resizer } from "../helpers/jimp.js";
 
 const { JWT_SECRET } = process.env;
 
@@ -13,6 +15,8 @@ const signup = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use");
   }
+
+  req.body.avatarURL = gravatar.url(email);
 
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -68,9 +72,23 @@ const logout = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  if (req.file === undefined) {
+    throw HttpError(400);
+  }
+  try {
+    const avatarURL = await resizer(req.file.filename, req.user.email);
+    const response = await updateAvatar(req.user._id, { avatarURL });
+    res.json(response);
+  } catch (error) {
+    throw HttpError(error.status, error.message);
+  }
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
