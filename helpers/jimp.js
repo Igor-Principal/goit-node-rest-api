@@ -1,6 +1,7 @@
 import Jimp from "jimp";
 import path from "path";
 import fs from "fs";
+import "dotenv/config";
 import HttpError from "./HttpError.js";
 
 const staticPath = path.resolve("public", "avatars");
@@ -13,6 +14,7 @@ export const resizer = async (fileName, user) => {
 
   const inputPath = path.join(tempPath, fileName);
   const outputPath = path.join(staticPath, newFileName);
+  const avatarURL = path.join("avatars", newFileName);
 
   try {
     const image = await Jimp.read(inputPath);
@@ -20,7 +22,7 @@ export const resizer = async (fileName, user) => {
 
     fs.unlinkSync(inputPath);
 
-    return outputPath;
+    return avatarURL;
   } catch (error) {
     throw HttpError(400, error.message);
   }

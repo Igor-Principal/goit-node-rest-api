@@ -74,11 +74,12 @@ const logout = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   if (req.file === undefined) {
-    throw HttpError(400);
+    throw HttpError(400, "File not found");
   }
+
   try {
     const avatarURL = await resizer(req.file.filename, req.user.email);
-    const response = await updateAvatar(req.user._id, { avatarURL });
+    const response = await authServices.updAvatar(req.user._id, { avatarURL });
     res.json(response);
   } catch (error) {
     throw HttpError(error.status, error.message);
