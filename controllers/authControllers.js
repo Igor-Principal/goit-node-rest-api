@@ -81,8 +81,8 @@ const resendVerify = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  res.status(400).json({
-    message: "Verification has already been passed",
+  res.status(200).json({
+    message: "Verification email sent",
   });
 };
 
